@@ -18,7 +18,17 @@ App.config
       <add key="portqueue" value="5672" />
 	  <add key="usernamedb" value="usernamedb" />
 	  <add key="passworddb" value="passworddb" />
+	  <add key="addressdb" value="localhost" />
 	  <add key="portdb" value="portdb" />
 	  <add key="dbname" value="dbname" />
    </appSettings>
 </configuration>
+
+# Dev
+
+Start mongo
+
+cd "C:\Program Files\MongoDB\Server\3.6\bin\"
+./mongod.exe
+cd "C:\Program Files\MongoDB\Server\3.6\bin\"
+./mongo.exe"
