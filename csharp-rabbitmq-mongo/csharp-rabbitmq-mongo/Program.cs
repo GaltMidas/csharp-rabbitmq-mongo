@@ -7,6 +7,8 @@ using RabbitMQ.Client;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using RabbitMQ.Client.Events;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace csharp_rabbitmq_mongo
 {
@@ -14,7 +16,9 @@ namespace csharp_rabbitmq_mongo
     {
         static void Main(string[] args)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var addressqueue = ConfigurationManager.AppSettings.Get("addressqueue");
+            var portqueue = ConfigurationManager.AppSettings.Get("portqueue");
+            var factory = new ConnectionFactory() { HostName = addressqueue };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
@@ -45,7 +49,9 @@ namespace csharp_rabbitmq_mongo
                 Console.ReadLine();
             }
 
-            var client = new MongoClient("mongodb://localhost:27017");
+            var addressdb = ConfigurationManager.AppSettings.Get("addressdb");
+            var portdb = ConfigurationManager.AppSettings.Get("portdb");
+            var client = new MongoClient("mongodb://" + addressdb + ":" + portdb);
             var database = client.GetDatabase("foo");
         }
     }
