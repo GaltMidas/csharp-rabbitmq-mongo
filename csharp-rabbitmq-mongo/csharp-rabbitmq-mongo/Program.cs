@@ -33,19 +33,17 @@ namespace csharp_rabbitmq_mongo
                 Console.WriteLine(" [x] Sent {0}", message);
             }
 
-            using (IConnection connection = new ConnectionFactory().CreateConnection())
+            using (var connection = factory.CreateConnection())
+            using (IModel channel = connection.CreateModel())
             {
-                using (IModel channel = connection.CreateModel())
+                channel.QueueDeclare("hello", false, false, false, null);
+                var consumer = new EventingBasicConsumer(channel);
+                BasicGetResult result = channel.BasicGet("hello", true);
+                if (result != null)
                 {
-                    channel.QueueDeclare("hello", false, false, false, null);
-                    var consumer = new EventingBasicConsumer(channel);
-                    BasicGetResult result = channel.BasicGet("hello", true);
-                    if (result != null)
-                    {
-                        string data =
-                        Encoding.UTF8.GetString(result.Body);
-                        Console.WriteLine(data);
-                    }
+                    string data =
+                    Encoding.UTF8.GetString(result.Body);
+                    Console.WriteLine(data);
                 }
             }
 
