@@ -20,7 +20,7 @@ namespace csharp_rabbitmq_mongo
             var portqueue = ConfigurationManager.AppSettings.Get("portqueue");
             var usernamequeue = ConfigurationManager.AppSettings.Get("usernamequeue");
             var passwordqueue = ConfigurationManager.AppSettings.Get("passwordqueue");
-            var factory = new ConnectionFactory() { HostName = addressqueue, UserName = usernamequeue, Password = passwordqueue, VirtualHost = "/"};
+            var factory = new ConnectionFactory() { HostName = addressqueue, UserName = usernamequeue, Password = passwordqueue, VirtualHost = "/" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
@@ -33,32 +33,49 @@ namespace csharp_rabbitmq_mongo
                 Console.WriteLine(" [x] Sent {0}", message);
             }
 
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            using (IConnection connection = new ConnectionFactory().CreateConnection())
             {
-                channel.QueueDeclare(queue: "hello", durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
+                using (IModel channel = connection.CreateModel())
                 {
-                    var body = ea.Body;
-                    var message = Encoding.UTF8.GetString(body);
-                    Console.WriteLine(" [x] Received {0}", message);
-                };
-                channel.BasicConsume(queue: "hello", autoAck: true, consumer: consumer);
+                    channel.QueueDeclare("hello", false, false, false, null);
+                    var consumer = new EventingBasicConsumer(channel);
+                    BasicGetResult result = channel.BasicGet("hello", true);
+                    if (result != null)
+                    {
+                        string data =
+                        Encoding.UTF8.GetString(result.Body);
+                        Console.WriteLine(data);
+                    }
+                }
             }
 
-            var usernamedb = ConfigurationManager.AppSettings.Get("usernamedb");
-            var passworddb = ConfigurationManager.AppSettings.Get("passworddb");
-            var addressdb = ConfigurationManager.AppSettings.Get("addressdb");
-            var portdb = ConfigurationManager.AppSettings.Get("portdb");
-            var dbname = ConfigurationManager.AppSettings.Get("dbname");
-            var client = new MongoClient("mongodb://" + usernamedb + ":" + passworddb + "@" + addressdb + ":" + portdb + "/" + dbname);
-            // var client = new MongoClient("mongodb://localhost:27017");
-            var database = client.GetDatabase(dbname);
-            var collection = database.GetCollection<BsonDocument>("stream_data");
-            var document = collection.Find(new BsonDocument()).FirstOrDefault();
-            Console.WriteLine(document.ToString());
+            //var factory = new ConnectionFactory() { HostName = "localhost" };
+            //using (var connection = factory.CreateConnection())
+            //using (var channel = connection.CreateModel())
+            //{
+            //    channel.QueueDeclare(queue: "hello", durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+            //    var consumer = new EventingBasicConsumer(channel);
+            //    consumer.Received += (model, ea) =>
+            //    {
+            //        var body = ea.Body;
+            //        var message = Encoding.UTF8.GetString(body);
+            //        Console.WriteLine(" [x] Received {0}", message);
+            //    };
+            //    channel.BasicConsume(queue: "hello", autoAck: true, consumer: consumer);
+            //}
+
+            //var usernamedb = ConfigurationManager.AppSettings.Get("usernamedb");
+            //var passworddb = ConfigurationManager.AppSettings.Get("passworddb");
+            //var addressdb = ConfigurationManager.AppSettings.Get("addressdb");
+            //var portdb = ConfigurationManager.AppSettings.Get("portdb");
+            //var dbname = ConfigurationManager.AppSettings.Get("dbname");
+            //var client = new MongoClient("mongodb://" + usernamedb + ":" + passworddb + "@" + addressdb + ":" + portdb + "/" + dbname);
+            //// var client = new MongoClient("mongodb://localhost:27017");
+            //var database = client.GetDatabase(dbname);
+            //var collection = database.GetCollection<BsonDocument>("stream_data");
+            //var document = collection.Find(new BsonDocument()).FirstOrDefault();
+            //Console.WriteLine(document.ToString());
 
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
