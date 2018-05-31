@@ -32,3 +32,9 @@ cd "C:\Program Files\MongoDB\Server\3.6\bin\"
 ./mongod.exe
 cd "C:\Program Files\MongoDB\Server\3.6\bin\"
 ./mongo.exe"
+
+# Deploy
+
+install .NET
+
+https://www.microsoft.com/net/download/windows
