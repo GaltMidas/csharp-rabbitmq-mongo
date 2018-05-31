@@ -65,17 +65,17 @@ namespace csharp_rabbitmq_mongo
             //    channel.BasicConsume(queue: "hello", autoAck: true, consumer: consumer);
             //}
 
-            //var usernamedb = ConfigurationManager.AppSettings.Get("usernamedb");
-            //var passworddb = ConfigurationManager.AppSettings.Get("passworddb");
-            //var addressdb = ConfigurationManager.AppSettings.Get("addressdb");
-            //var portdb = ConfigurationManager.AppSettings.Get("portdb");
-            //var dbname = ConfigurationManager.AppSettings.Get("dbname");
-            //var client = new MongoClient("mongodb://" + usernamedb + ":" + passworddb + "@" + addressdb + ":" + portdb + "/" + dbname);
-            //// var client = new MongoClient("mongodb://localhost:27017");
-            //var database = client.GetDatabase(dbname);
-            //var collection = database.GetCollection<BsonDocument>("stream_data");
-            //var document = collection.Find(new BsonDocument()).FirstOrDefault();
-            //Console.WriteLine(document.ToString());
+            var usernamedb = ConfigurationManager.AppSettings.Get("usernamedb");
+            var passworddb = ConfigurationManager.AppSettings.Get("passworddb");
+            var addressdb = ConfigurationManager.AppSettings.Get("addressdb");
+            var portdb = ConfigurationManager.AppSettings.Get("portdb");
+            var dbname = ConfigurationManager.AppSettings.Get("dbname");
+            var client = new MongoClient("mongodb://" + usernamedb + ":" + passworddb + "@" + addressdb + ":" + portdb + "/" + dbname);
+            // var client = new MongoClient("mongodb://localhost:27017");
+            var database = client.GetDatabase(dbname);
+            var collection = database.GetCollection<BsonDocument>("stream_data");
+            var document = collection.Find(new BsonDocument()).FirstOrDefault();
+            Console.WriteLine(document.ToString());
 
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
