@@ -18,7 +18,9 @@ namespace csharp_rabbitmq_mongo
         {
             var addressqueue = ConfigurationManager.AppSettings.Get("addressqueue");
             var portqueue = ConfigurationManager.AppSettings.Get("portqueue");
-            var factory = new ConnectionFactory() { HostName = addressqueue };
+            var usernamequeue = ConfigurationManager.AppSettings.Get("usernamequeue");
+            var passwordqueue = ConfigurationManager.AppSettings.Get("passwordqueue");
+            var factory = new ConnectionFactory() { HostName = addressqueue, UserName = usernamequeue, Password = passwordqueue};
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
